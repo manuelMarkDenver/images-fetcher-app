@@ -1,17 +1,25 @@
 import "./App.css";
-import { Button, Stack } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import PhotosContainer from "./features/Images/PhotosContainer";
 
 function App() {
   return (
     <>
-      <Stack direction="horizontal" gap={2}>
-        <Button as="a" variant="primary">
-          Button as link
-        </Button>
-        <Button as="a" variant="success">
-          Button as link
-        </Button>
-      </Stack>
+      <Container>
+        <Row>
+          <Col>
+            <h1 className="text-slate-500 text-center my-2">
+              Images Fetcher App
+            </h1>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <PhotosContainer />
+          </Col>
+        </Row>
+      </Container>
       ;
     </>
   );
