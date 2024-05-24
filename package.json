@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "client": "npm run dev --prefix client"
+    "client": "npm run dev --prefix client",
+    "client:build": "npm run build --prefix client",
+    "client:preview": "npm run preview --prefix client",
+    "client:test": "npm run test --prefix client",
+    "client:test-ui": "npm run test:ui --prefix client"
   },
   "keywords": [],
   "author": "",
