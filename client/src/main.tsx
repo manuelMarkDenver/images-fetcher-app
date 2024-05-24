@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 import App from "./App.tsx";
 import HomeScreen from "./screens/HomeScreen.tsx";
 
-import { store } from "./store.tsx";
+import store from "./store";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";

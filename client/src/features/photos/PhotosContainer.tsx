@@ -5,17 +5,21 @@ import { Photo } from "../../types/Photo";
 // import ItemsPerPageDropdown from "../../components/ItemsPerPageDropdown";
 import StyledInput from "../../components/StyledInput";
 import { usePhotos } from "./shared/usePhotos";
+import { useSelector } from "react-redux";
+import { selectSearchString } from "../../slices/photosSlice";
 
 const PhotosContainer = () => {
   const cacheKey = `https://jsonplaceholder.typicode.com/photos`;
 
+  const searchString = useSelector(selectSearchString);
   const {
     data: photos,
     isLoading,
     isError,
     size,
     setSize,
-  } = usePhotos(cacheKey);
+  } = usePhotos({ url: cacheKey, searchString: searchString });
+
   if (isError) {
     return <div>Error: {isError.message}</div>;
   }

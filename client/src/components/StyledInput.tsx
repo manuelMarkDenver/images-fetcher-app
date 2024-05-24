@@ -1,21 +1,30 @@
-import React, { useState } from "react";
 import { Form, Stack } from "react-bootstrap";
-import { usePhotos } from "../features/photos/shared/usePhotos";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSearchString } from "../slices/photosSlice";
+import { setPhotoSearchString } from "../slices/photosSlice";
+import debounce from "just-debounce-it";
+import { useEffect, useState } from "react";
+// import { usePhotos } from "../features/photos/shared/usePhotos";
 
 const StyledInput: React.FC = () => {
-  const cacheKey = `https://jsonplaceholder.typicode.com/photos`;
+  const [searchString, setSearchString] = useState<string>("");
 
-  const [searchString, setSearchString] = useState<string | undefined>("");
-  const { filterPhotosBySearchString } = usePhotos(cacheKey);
+  const globalSearchString = useSelector(selectSearchString);
 
-  const debouncedChange = async (searchString: string | undefined) => {
-    filterPhotosBySearchString(0, searchString);
-  };
+  useEffect(() => {
+    if (globalSearchString) setSearchString(globalSearchString);
+  }, [globalSearchString]);
+
+  const dispatch = useDispatch();
+
+  const debounceSearch = debounce((value: string) => {
+    dispatch(setPhotoSearchString(value));
+  }, 1000);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchString(value);
-    debouncedChange(searchString);
+    debounceSearch(value);
   };
 
   return (
