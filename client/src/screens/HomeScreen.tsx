@@ -1,6 +1,8 @@
+import { lazy } from "react";
 import { Col, Row } from "react-bootstrap";
-import Hero from "../components/Hero";
 import PhotosContainer from "../features/photos/PhotosContainer";
+
+const Hero = lazy(() => import("../components/Hero"));
 
 const HomeScreen = () => {
   return (

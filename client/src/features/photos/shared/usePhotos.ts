@@ -24,6 +24,15 @@ export function usePhotos({ url, searchString }: usePhotosProps) {
   const photos = useSelector((state: RootState) => state.photos.items);
   const getKey = (pageIndex: number, previousPageData: Photo[]) => {
     if (previousPageData && !previousPageData.length) return null;
+
+    if (
+      searchString === "" ||
+      searchString === undefined ||
+      !searchString ||
+      searchString === null
+    )
+      return `${url}?_page=${pageIndex + 1}&_limit=${PAGE_SIZE}`;
+
     return `${url}?_page=${
       pageIndex + 1
     }&_limit=${PAGE_SIZE}&title_like=${searchString}`;

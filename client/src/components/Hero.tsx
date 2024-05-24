@@ -5,7 +5,9 @@ const Hero = () => {
     <Container>
       <Row>
         <Col>
-          <h1 className="text-slate-500 text-center my-5">Dashboard</h1>
+          <h1 className="text-slate-500 text-center my-5 text-3xl font-bold">
+            Dashboard
+          </h1>
         </Col>
       </Row>
     </Container>

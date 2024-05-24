@@ -18,8 +18,8 @@ const StyledInput: React.FC = () => {
   const dispatch = useDispatch();
 
   const debounceSearch = debounce((value: string) => {
-    dispatch(setPhotoSearchString(value));
-  }, 1000);
+    dispatch(setPhotoSearchString(value.trim()));
+  }, 1500);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

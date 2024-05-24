@@ -8,19 +8,25 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Provider } from "react-redux";
-
-import App from "./App.tsx";
-import HomeScreen from "./screens/HomeScreen.tsx";
-
 import store from "./store";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+// Lazy-loaded components
+const App = React.lazy(() => import("./App"));
+const HomeScreen = React.lazy(() => import("./screens/HomeScreen"));
+const NotFound = React.lazy(() => import("./components/NotFound"));
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<HomeScreen />} />
+      <Route
+        index={true}
+        path="/"
+        element={<HomeScreen />}
+        errorElement={<NotFound />}
+      />
     </Route>
   )
 );

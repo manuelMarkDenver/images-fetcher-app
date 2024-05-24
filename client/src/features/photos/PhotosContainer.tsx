@@ -1,4 +1,4 @@
-import { Button, Col, Row, Stack } from "react-bootstrap";
+import { Button, Col, Row, Spinner, Stack } from "react-bootstrap";
 import PhotoComponent from "./PhotoComponent";
 import { Photo } from "../../types/Photo";
 // import CustomPagination from "../../components/CustomPagination";
@@ -7,26 +7,32 @@ import StyledInput from "../../components/StyledInput";
 import { usePhotos } from "./shared/usePhotos";
 import { useSelector } from "react-redux";
 import { selectSearchString } from "../../slices/photosSlice";
+import SkeletonCards from "./components/SkeletonCards";
 
 const PhotosContainer = () => {
   const cacheKey = `https://jsonplaceholder.typicode.com/photos`;
 
   const searchString = useSelector(selectSearchString);
+
   const {
     data: photos,
     isLoading,
     isError,
     size,
     setSize,
+    isEmpty,
+    isReachingEnd,
+    isRefreshing,
   } = usePhotos({ url: cacheKey, searchString: searchString });
+  console.log("🚀 ~ PhotosContainer ~ isReachingEnd:", isReachingEnd);
+
+  // const isLoading = true;
 
   if (isError) {
     return <div>Error: {isError.message}</div>;
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const withPhotos = photos && Array.isArray(photos) && photos.length > 0;
 
   return (
     <Stack gap={3}>
@@ -34,17 +40,40 @@ const PhotosContainer = () => {
       <StyledInput />
 
       {/* Photos List */}
-      <Row xs={1} md={3} className="g-4 max-h-[700px] overflow-y-scroll">
-        {photos &&
-          Array.isArray(photos) &&
-          photos.map((photo: Photo) => (
+      {isLoading ? (
+        <SkeletonCards />
+      ) : withPhotos ? (
+        <Row
+          xs={1}
+          md={3}
+          className="g-4 max-h-[550px] overflow-y-scroll w-100"
+        >
+          {photos.map((photo: Photo) => (
             <Col key={photo.id}>
               <PhotoComponent photo={photo} />
             </Col>
           ))}
-      </Row>
+        </Row>
+      ) : (
+        <p className="flex justify-center items-center text-center w-100">
+          No photos found
+        </p>
+      )}
 
-      <Button onClick={() => setSize(size + 1)}>Load More</Button>
+      <Button
+        onClick={() => setSize(size + 1)}
+        disabled={isLoading || isReachingEnd || isEmpty || isRefreshing}
+      >
+        {isLoading && (
+          <Spinner animation="border" role="status" aria-hidden="true" />
+        )}
+
+        {isLoading || isRefreshing
+          ? "Loading..."
+          : isReachingEnd
+          ? "Nothing more to load"
+          : "Load More Photos"}
+      </Button>
     </Stack>
   );
 };
