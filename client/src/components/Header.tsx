@@ -5,7 +5,7 @@ const Header = () => {
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
-          <Navbar.Brand href="/">Images Fetcher App</Navbar.Brand>
+          <Navbar.Brand href="/">Images Viewer App</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
         </Container>
       </Navbar>
