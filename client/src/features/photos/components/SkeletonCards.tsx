@@ -1,5 +1,5 @@
 import { Card, Col, Placeholder, Row } from "react-bootstrap";
-import placeholderImage from "../../../../public/images/placeholder.svg";
+import placeholderImage from "../../../assets/images/placeholder.svg";
 
 const SkeletonCards = () => {
   // Array of placeholder data or empty array if loading
@@ -14,11 +14,7 @@ const SkeletonCards = () => {
       {placeholderData.map((photo) => (
         <Col key={photo.id}>
           <Card className="rounded-lg">
-            <Placeholder
-              as={Card.Img}
-              variant="top"
-              src={placeholderImage}
-            ></Placeholder>
+            <Card.Img as={Card.Img} variant="top" src={placeholderImage} />
             <Card.Body>
               <Placeholder as={Card.Title} animation="glow">
                 <Placeholder xs={12} />

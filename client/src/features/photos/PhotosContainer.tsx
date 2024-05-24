@@ -1,7 +1,6 @@
 import { Button, Col, Row, Spinner, Stack } from "react-bootstrap";
 import PhotoComponent from "./PhotoComponent";
 import { Photo } from "../../types/Photo";
-// import CustomPagination from "../../components/CustomPagination";
 // import ItemsPerPageDropdown from "../../components/ItemsPerPageDropdown";
 import StyledInput from "../../components/StyledInput";
 import { usePhotos } from "./shared/usePhotos";
@@ -24,8 +23,6 @@ const PhotosContainer = () => {
     isReachingEnd,
     isRefreshing,
   } = usePhotos({ url: cacheKey, searchString: searchString });
-  console.log("🚀 ~ PhotosContainer ~ isReachingEnd:", isReachingEnd);
-
   // const isLoading = true;
 
   if (isError) {
@@ -33,6 +30,8 @@ const PhotosContainer = () => {
   }
 
   const withPhotos = photos && Array.isArray(photos) && photos.length > 0;
+
+  const emptyPhotosList = !photos || photos.length === 0 || isEmpty;
 
   return (
     <Stack gap={3}>
@@ -70,7 +69,7 @@ const PhotosContainer = () => {
 
         {isLoading || isRefreshing
           ? "Loading..."
-          : isReachingEnd
+          : isReachingEnd || emptyPhotosList
           ? "Nothing more to load"
           : "Load More Photos"}
       </Button>

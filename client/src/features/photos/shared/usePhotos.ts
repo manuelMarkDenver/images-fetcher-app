@@ -11,7 +11,7 @@ const fetcher = async (url: string) => {
   return await axios.get(url).then((res) => res.data);
 };
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 9;
 
 type usePhotosProps = {
   url: string;
