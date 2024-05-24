@@ -1,24 +1,14 @@
 import "./App.css";
-import { Col, Container, Row } from "react-bootstrap";
-import PhotosContainer from "./features/Images/PhotosContainer";
+import { Container } from "react-bootstrap";
+import Header from "./components/Header";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
+      <Header />
       <Container>
-        <Row>
-          <Col>
-            <h1 className="text-slate-500 text-center my-2">
-              Images Fetcher App
-            </h1>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col>
-            <PhotosContainer />
-          </Col>
-        </Row>
+        <Outlet />
       </Container>
       ;
     </>

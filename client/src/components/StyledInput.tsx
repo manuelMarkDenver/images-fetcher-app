@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Stack } from "react-bootstrap";
+import { usePhotos } from "../features/photos/shared/usePhotos";
 
-type StyledInputProps = {
-  searchString?: string;
-  setSearchString: (searchString: string) => void; // Callback function to handle search
-};
+const StyledInput: React.FC = () => {
+  const cacheKey = `https://jsonplaceholder.typicode.com/photos`;
 
-const StyledInput: React.FC<StyledInputProps> = ({
-  searchString,
-  setSearchString,
-}: StyledInputProps) => {
-  const handleOnChangeSearchString = (searchString: string) => {
-    setSearchString(searchString);
+  const [searchString, setSearchString] = useState<string | undefined>("");
+  const { filterPhotosBySearchString } = usePhotos(cacheKey);
+
+  const debouncedChange = async (searchString: string | undefined) => {
+    filterPhotosBySearchString(0, searchString);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchString(value);
+    debouncedChange(searchString);
   };
 
   return (
@@ -21,7 +25,7 @@ const StyledInput: React.FC<StyledInputProps> = ({
           type="text"
           placeholder="Search images by title..."
           value={searchString}
-          onChange={(e) => handleOnChangeSearchString(e.target.value)}
+          onChange={handleChange}
         />
       </Stack>
     </Form.Group>
