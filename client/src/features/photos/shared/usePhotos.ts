@@ -95,7 +95,6 @@ export function usePhotos({ url, searchString }: usePhotosProps) {
     data: photos ? flatData : [],
     size,
     setSize,
-    isLoading,
     isLoadingMore,
     isEmpty,
     isReachingEnd,
