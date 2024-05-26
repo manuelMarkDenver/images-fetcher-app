@@ -22,6 +22,7 @@ export function usePhotos({ url, searchString }: usePhotosProps) {
   const dispatch = useDispatch();
 
   const photos = useSelector((state: RootState) => state.photos.items);
+
   const getKey = (pageIndex: number, previousPageData: Photo[]) => {
     if (previousPageData && !previousPageData.length) return null;
 
@@ -54,9 +55,11 @@ export function usePhotos({ url, searchString }: usePhotosProps) {
     (size > 0 && photos && typeof photos[size - 1] === "undefined");
 
   const isEmpty = photosData?.[0]?.length === 0;
+
   const isReachingEnd =
     isEmpty ||
     (photosData && photosData[photosData.length - 1]?.length < PAGE_SIZE);
+
   const isRefreshing = isValidating && photosData && photosData.length === size;
 
   useEffect(() => {
@@ -92,10 +95,10 @@ export function usePhotos({ url, searchString }: usePhotosProps) {
     data: photos ? flatData : [],
     size,
     setSize,
+    isLoading,
     isLoadingMore,
     isEmpty,
     isReachingEnd,
-    isLoading,
     isRefreshing,
     isError: error,
     filterPhotosBySearchString,

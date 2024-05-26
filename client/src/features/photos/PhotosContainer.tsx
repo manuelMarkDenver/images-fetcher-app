@@ -16,7 +16,7 @@ const PhotosContainer = () => {
 
   const {
     data: photos,
-    isLoading,
+    isLoadingMore,
     isError,
     size,
     setSize,
@@ -41,7 +41,7 @@ const PhotosContainer = () => {
       <StyledInput />
 
       {/* Photos List */}
-      {isLoading ? (
+      {isLoadingMore ? (
         <PlaceholderPhotoCards />
       ) : withPhotos ? (
         <Row
@@ -65,13 +65,18 @@ const PhotosContainer = () => {
 
       <Button
         onClick={() => setSize(size + 1)}
-        disabled={isLoading || isReachingEnd || isEmpty || isRefreshing}
+        disabled={isLoadingMore || isReachingEnd || isEmpty || isRefreshing}
       >
-        {isLoading && (
-          <Spinner animation="border" role="status" aria-hidden="true" />
+        {isLoadingMore && (
+          <Spinner
+            animation="border"
+            size="sm"
+            role="status"
+            aria-hidden="true"
+          />
         )}
 
-        {isLoading || isRefreshing
+        {isLoadingMore || isRefreshing
           ? "Loading..."
           : isReachingEnd || emptyPhotosList
           ? "Nothing more to load"

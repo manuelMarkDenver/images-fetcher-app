@@ -7,6 +7,35 @@ import { Photo } from "../../types/Photo";
 import { usePhotos } from "../../features/photos/shared/usePhotos";
 
 describe("PhotosContainer", () => {
+  beforeEach(() => {
+    (usePhotos as ReturnType<typeof vi.fn>).mockReset();
+
+    vi.mock("../../features/photos/shared/usePhotos", () => {
+      return {
+        __esModule: true,
+        usePhotos: vi.fn(),
+      };
+    });
+
+    vi.mock(
+      "../../features/photos/components/PlaceholderPhotoCards",
+      async (importOriginal) => {
+        const mod = await importOriginal<
+          typeof import("../../features/photos/components/PlaceholderPhotoCards")
+        >();
+        return {
+          ...mod,
+          skeletonExport: vi.fn(),
+          default: () => <div>Mocked SkeletonCards</div>,
+        };
+      }
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   const mockPhotos: Photo[] = [
     {
       albumId: 1,
@@ -33,54 +62,14 @@ describe("PhotosContainer", () => {
 
   const emptyMockPhotos: Photo[] = [];
 
-  // Mock the usePhotos hook
-  vi.mock("../../features/photos/shared/usePhotos", () => {
-    return {
-      __esModule: true,
-      usePhotos: vi.fn(),
-    };
-  });
-
-  // Mock the SkeletonCards component
-  vi.mock("../../features/photos/components/SkeletonCards", () => ({
-    default: () => <div>Mocked SkeletonCards</div>,
-  }));
-
   const mockedUsePhotos = usePhotos as ReturnType<typeof vi.fn>;
 
   const mockWithPhotos = (
     PhotoContainerComponent: React.ComponentType<{ photos: Photo[] }>
   ) => {
-    // Simulated photos data
-    const photos: Photo[] = [
-      {
-        albumId: 1,
-        id: 1,
-        title: "accusamus beatae ad facilis cum similique qui sunt",
-        url: "https://via.placeholder.com/600/92c952",
-        thumbnailUrl: "https://via.placeholder.com/150/92c952",
-      },
-      {
-        albumId: 1,
-        id: 2,
-        title: "reprehenderit est deserunt velit ipsam",
-        url: "https://via.placeholder.com/600/771796",
-        thumbnailUrl: "https://via.placeholder.com/150/771796",
-      },
-      {
-        albumId: 1,
-        id: 3,
-        title: "officia porro iure quia iusto qui ipsa ut modi",
-        url: "https://via.placeholder.com/600/24f355",
-        thumbnailUrl: "https://via.placeholder.com/150/24f355",
-      },
-    ];
-
-    // Return the component with mock photos as props
-    return <PhotoContainerComponent photos={photos} />;
+    return <PhotoContainerComponent photos={mockPhotos} />;
   };
 
-  // Mock withPhotos usage in the test
   vi.mock("../../components/withPhotos", () => ({
     __esModule: true,
     withPhotos: (Component: React.ComponentType<{ photos: Photo[] }>) =>
@@ -90,7 +79,7 @@ describe("PhotosContainer", () => {
   it("should render No photos found when data is null or empty", () => {
     mockedUsePhotos.mockReturnValue({
       data: null,
-      isLoading: false,
+      isLoadingMore: false,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -111,7 +100,7 @@ describe("PhotosContainer", () => {
   it("should render No photos found when data is null or empty", () => {
     mockedUsePhotos.mockReturnValue({
       data: null,
-      isLoading: false,
+      isLoadingMore: false,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -129,10 +118,10 @@ describe("PhotosContainer", () => {
     expect(screen.getByText(/No photos found/i)).toBeInTheDocument();
   });
 
-  it("renders SkeletonCards Componen when isLoading is true", () => {
+  it("renders SkeletonCards Component when isLoading is true", async () => {
     mockedUsePhotos.mockReturnValue({
       data: null,
-      isLoading: true,
+      isLoadingMore: true,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -147,13 +136,15 @@ describe("PhotosContainer", () => {
       </Provider>
     );
 
-    expect(screen.getByText(/Mocked SkeletonCards/i)).toBeInTheDocument();
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/Mocked Skeleton/i)).toBeInTheDocument();
   });
 
   it("renders button with 'Loading...' text when isLoading or isRefreshing is true", () => {
     mockedUsePhotos.mockReturnValue({
       data: mockPhotos,
-      isLoading: true,
+      isLoadingMore: true,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -168,13 +159,13 @@ describe("PhotosContainer", () => {
       </Provider>
     );
 
-    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
   });
 
   it("renders button with 'Nothing more to load' when isReachingEnd is true", async () => {
     mockedUsePhotos.mockReturnValue({
       data: mockPhotos,
-      isLoading: false,
+      isLoadingMore: false,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -203,7 +194,7 @@ describe("PhotosContainer", () => {
   test('should render empty list and "No photos found" message when data is empty', async () => {
     mockedUsePhotos.mockReturnValue({
       data: emptyMockPhotos,
-      isLoading: false,
+      isLoadingMore: false,
       isError: false,
       size: 1,
       setSize: vi.fn(),
@@ -233,7 +224,7 @@ describe("PhotosContainer", () => {
   it("should render list of photos and button with 'Load More Photos' text when has data or photos, isReachingEnd is false and isLoading is false", async () => {
     mockedUsePhotos.mockReturnValue({
       data: mockPhotos,
-      isLoading: false,
+      isLoadingMore: false,
       isError: false,
       size: 1,
       setSize: vi.fn(),
