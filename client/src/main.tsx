@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 
 import {
@@ -8,10 +8,15 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./store";
+import { ErrorBoundary } from "react-error-boundary";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import FallBackPage from "./components/FallBackPage";
+import ErrorHandlerPage from "./components/ErrorHandlerPage";
+
+import store from "./store";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 // Lazy-loaded components
 const App = React.lazy(() => import("./App"));
@@ -25,16 +30,21 @@ const router = createBrowserRouter(
         index={true}
         path="/"
         element={<HomeScreen />}
-        errorElement={<NotFound />}
+        errorElement={<ErrorHandlerPage />}
       />
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
+    <ErrorBoundary FallbackComponent={FallBackPage} onError={ErrorHandlerPage}>
+      <Suspense fallback={<LoadingSpinner />}>
+        <React.StrictMode>
+          <RouterProvider router={router} />
+        </React.StrictMode>
+      </Suspense>
+    </ErrorBoundary>
   </Provider>
 );

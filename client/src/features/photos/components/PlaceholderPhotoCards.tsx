@@ -1,7 +1,7 @@
 import { Card, Col, Placeholder, Row } from "react-bootstrap";
 import placeholderImage from "../../../assets/images/placeholder.svg";
 
-const SkeletonCards = () => {
+const PlaceholderPhotoCards = () => {
   // Array of placeholder data or empty array if loading
   const placeholderData = Array.from({ length: 6 }).map((_, index) => ({
     id: index + 1,
@@ -32,4 +32,4 @@ const SkeletonCards = () => {
   );
 };
 
-export default SkeletonCards;
+export default PlaceholderPhotoCards;

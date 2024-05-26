@@ -1,5 +1,9 @@
 import { Col, Container, Row } from "react-bootstrap";
 import PhotosContainer from "../features/photos/PhotosContainer";
+import FallBackPage from "../components/FallBackPage";
+import { ErrorBoundary } from "react-error-boundary";
+import { Suspense } from "react";
+import PlaceholderPhotoCards from "../features/photos/components/PlaceholderPhotoCards";
 
 const HomeScreen = () => {
   return (
@@ -14,7 +18,11 @@ const HomeScreen = () => {
 
       <Row>
         <Col>
-          <PhotosContainer />
+          <ErrorBoundary FallbackComponent={FallBackPage}>
+            <Suspense fallback={<PlaceholderPhotoCards />}>
+              <PhotosContainer />
+            </Suspense>
+          </ErrorBoundary>
         </Col>
       </Row>
     </Container>

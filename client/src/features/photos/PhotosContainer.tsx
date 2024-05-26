@@ -6,7 +6,8 @@ import StyledInput from "../../components/StyledInput";
 import { usePhotos } from "./shared/usePhotos";
 import { useSelector } from "react-redux";
 import { selectSearchString } from "../../slices/photosSlice";
-import SkeletonCards from "./components/SkeletonCards";
+import PlaceholderPhotoCards from "./components/PlaceholderPhotoCards";
+import { Suspense } from "react";
 
 const PhotosContainer = () => {
   const cacheKey = `https://jsonplaceholder.typicode.com/photos`;
@@ -36,11 +37,12 @@ const PhotosContainer = () => {
   return (
     <Stack gap={3}>
       {/* Search Input */}
+
       <StyledInput />
 
       {/* Photos List */}
       {isLoading ? (
-        <SkeletonCards />
+        <PlaceholderPhotoCards />
       ) : withPhotos ? (
         <Row
           xs={1}
@@ -49,7 +51,9 @@ const PhotosContainer = () => {
         >
           {photos.map((photo: Photo) => (
             <Col key={photo.id}>
-              <PhotoComponent photo={photo} />
+              <Suspense fallback={<PlaceholderPhotoCards />}>
+                <PhotoComponent photo={photo} />
+              </Suspense>
             </Col>
           ))}
         </Row>
